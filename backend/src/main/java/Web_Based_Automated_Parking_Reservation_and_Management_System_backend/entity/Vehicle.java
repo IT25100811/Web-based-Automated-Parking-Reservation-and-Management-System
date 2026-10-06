@@ -25,9 +25,10 @@ public class Vehicle {
     @Column(name = "license_plate", unique = true, nullable = false)
     private String licensePlate;
 
-    // The vehicle make (brand) cannot be empty and must be between 2 to 30 characters long
+    // The vehicle make (brand) cannot be empty, must be 2-30 characters, and no numbers
     @NotBlank(message = "Vehicle make is required")
     @Size(min = 2, max = 30, message = "Make must be between 2 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Brand name cannot contain numbers")
     @Column(nullable = false)
     private String make;
 
@@ -36,8 +37,9 @@ public class Vehicle {
     @Column(nullable = false)
     private String color;
 
-    // The vehicle type (e.g., Car, Van, Bike) is required
+    // The vehicle type (e.g., Car, Van, Bike, SUV) is required
     @NotBlank(message = "Vehicle type is required")
+    @Pattern(regexp = "^(Car|Bike|Van|Electric Vehicle \\(EV\\)|SUV)$", message = "Invalid vehicle type! Please select a valid category.")
     @Column(name = "vehicle_type", nullable = false)
     private String vehicleType;
 

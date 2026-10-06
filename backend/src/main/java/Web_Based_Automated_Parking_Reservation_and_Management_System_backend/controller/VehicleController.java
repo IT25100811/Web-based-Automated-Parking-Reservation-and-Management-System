@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -47,5 +49,19 @@ public class VehicleController {
     public ResponseEntity<String> deleteVehicle(@PathVariable Long id) {
         vehicleService.deleteVehicle(id);
         return ResponseEntity.ok("Vehicle deleted successfully!");
+    }
+
+    // Saves the incoming data received from the frontend with validation.
+    @PostMapping("/add")
+    public ResponseEntity<?> addVehicle(@Valid @RequestBody Vehicle vehicle, BindingResult result) {
+
+
+        // If the backend validation fails, the error message from the Entity is sent to the frontend.
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
+        }
+
+        Vehicle savedVehicle = vehicleService.saveVehicle(vehicle);
+        return ResponseEntity.ok(savedVehicle);
     }
 }
