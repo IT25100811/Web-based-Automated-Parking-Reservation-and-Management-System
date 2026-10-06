@@ -612,7 +612,7 @@ const validateVehicleForm = () => {
       return false;
     }
 
-    // ALUTH VALIDATION EKA: Make & Color
+    // Make & Color
     const makeColorRegex = /^[A-Z][a-zA-Z\s]{0,49}$/;
 
     if (!makeColorRegex.test(newVehicle.make)) {
@@ -836,6 +836,7 @@ const validateVehicleForm = () => {
                   <option value="Bike">Bike</option>
                   <option value="Van">Van</option>
                   <option value="EV">Electric Vehicle (EV)</option>
+                  <option value="SUV">SUV</option>
                 </select>
               </div>
               {newVehicle.id && (
