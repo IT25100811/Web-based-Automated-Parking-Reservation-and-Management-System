@@ -10,7 +10,7 @@ import java.util.List;
 // This class handles all the web requests for reviews
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = "*") // Allows the frontend to connect without errors
+@CrossOrigin(origins = "*") // Allows the frontend to connect without CORS errors
 public class ReviewController {
 
     @Autowired
@@ -35,14 +35,25 @@ public class ReviewController {
         return ResponseEntity.ok("Review deleted successfully");
     }
 
-    // This method updates an old review with new details
+    // This method updates an old review with new details and performs validations
     @PutMapping("/update/{id}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review review) {
+    public ResponseEntity<?> updateReview(@PathVariable Long id, @RequestBody Review review) {
+        
+        // Backend validation: Ensures the review comment is not null or empty
+        if (review.getComment() == null || review.getComment().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Review comment cannot be empty!");
+        }
+        
+        // Backend validation: Ensures the review comment does not exceed the 1000 character limit
+        if (review.getComment().length() > 1000) {
+            return ResponseEntity.badRequest().body("Review comment must be 1000 characters or less!");
+        }
+
         Review updated = reviewService.updateReview(id, review);
         if (updated != null) {
             return ResponseEntity.ok(updated);
         }
-        return ResponseEntity.badRequest().build(); // Returns an error if it fails
+        return ResponseEntity.badRequest().body("Review update failed."); // Returns an error message if the update fails
     }
 
     // This method allows an admin to reply to a review
